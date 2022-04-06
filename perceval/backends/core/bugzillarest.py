@@ -422,6 +422,8 @@ class BugzillaRESTClient(HttpClient):
 
         logger.debug("Bugzilla REST client requests: %s params: %s",
                      resource, str(params))
+        
+        params.pop(self.PBUGZILLA_TOKEN)
 
         r = self.fetch(url, payload=params)
 
