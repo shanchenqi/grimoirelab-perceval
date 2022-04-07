@@ -286,9 +286,9 @@ class BugzillaRESTClient(HttpClient):
     RLOGIN = 'login'
 
     # Resource parameters
-    PBUGZILLA_LOGIN = 'login'
-    PBUGZILLA_PASSWORD = 'password'
-    PBUGZILLA_TOKEN = 'token'
+    # PBUGZILLA_LOGIN = 'login'
+    # PBUGZILLA_PASSWORD = 'password'
+    # PBUGZILLA_TOKEN = 'token'
     PIDS = 'ids'
     PLAST_CHANGE_TIME = 'last_change_time'
     PLIMIT = 'limit'
@@ -305,32 +305,9 @@ class BugzillaRESTClient(HttpClient):
     def __init__(self, base_url, user=None, password=None, api_token=None,
                  archive=None, from_archive=False, ssl_verify=True):
         super().__init__(base_url, archive=archive, from_archive=from_archive, ssl_verify=ssl_verify)
+    def __init__(self, base_url, archive=None, from_archive=False, ssl_verify=True):
+        super().__init__(base_url, archive=archive, from_archive=from_archive, ssl_verify=ssl_verify)
 
-        self.api_token = api_token if api_token else None
-
-        if user is not None and password is not None:
-            self.login(user, password)
-
-    def login(self, user, password):
-        """Authenticate a user in the server.
-
-        :param user: Bugzilla user
-        :param password: user password
-        """
-        params = {
-            self.PBUGZILLA_LOGIN: user,
-            self.PBUGZILLA_PASSWORD: password
-        }
-
-        try:
-            r = self.call(self.RLOGIN, params)
-        except requests.exceptions.HTTPError as e:
-            cause = ("Bugzilla REST client could not authenticate user %s. "
-                     "See exception: %s") % (user, str(e))
-            raise BackendError(cause=cause)
-
-        data = json.loads(r)
-        self.api_token = data['token']
 
     def bugs(self, from_date=DEFAULT_DATETIME, offset=None, max_bugs=MAX_BUGS):
         """Get the information of a list of bugs.
